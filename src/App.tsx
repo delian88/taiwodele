@@ -101,15 +101,16 @@ const Fireworks = () => {
       const x = Math.random() * canvas.width;
       const y = Math.random() * (canvas.height * 0.5);
       const color = colors[Math.floor(Math.random() * colors.length)];
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 50; i++) {
         particles.push(new Particle(x, y, color));
       }
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      if (Math.random() < 0.02) createFirework();
+      if (Math.random() < 0.04) createFirework();
 
       particles = particles.filter(p => p.alpha > 0);
       particles.forEach(p => {
@@ -128,7 +129,7 @@ const Fireworks = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-30" />;
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-60" />;
 };
 
 // Animated Character Component
@@ -137,37 +138,117 @@ const AnimatedCharacter = () => {
     <motion.div
       animate={{
         y: [0, -20, 0],
-        rotate: [0, 5, -5, 0],
+        rotate: [0, 2, -2, 0],
       }}
       transition={{
-        duration: 6,
+        duration: 4,
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="absolute right-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[500px] opacity-20 pointer-events-none z-0 hidden lg:block"
+      className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] md:w-[550px] opacity-50 pointer-events-none z-0 hidden lg:block"
     >
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#000', stopOpacity: 1 }} />
+            <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 0.8 }} />
+            <stop offset="100%" style={{ stopColor: '#000', stopOpacity: 0.4 }} />
           </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
-        <path fill="url(#grad1)" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.7,89.7,-0.5C88.9,14.7,82.2,29.4,73.1,42.1C64,54.8,52.5,65.5,39.1,72.7C25.7,79.9,10.4,83.6,-4.1,83.6C-18.6,83.6,-37.2,79.9,-51.1,71.1C-65,62.3,-74.2,48.4,-80.1,33.3C-86,18.2,-88.6,1.9,-86.3,-13.7C-84,-29.3,-76.8,-44.2,-65.4,-54.6C-54,-65,-38.4,-70.9,-24.1,-75.6C-9.8,-80.3,3.2,-83.8,17.4,-82.1C31.6,-80.4,44.7,-76.4,44.7,-76.4Z" transform="translate(100 100)" />
-        <motion.g
-          animate={{
-            y: [0, -5, 0],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          {/* Stylized Robot/Character Head */}
-          <rect x="70" y="60" width="60" height="50" rx="10" fill="#18181b" stroke="#f97316" strokeWidth="2" />
-          <rect x="80" y="75" width="10" height="10" rx="2" fill="#f97316" className="animate-pulse" />
-          <rect x="110" y="75" width="10" height="10" rx="2" fill="#f97316" className="animate-pulse" />
-          <path d="M85 95 Q100 105 115 95" stroke="#f97316" strokeWidth="2" fill="none" />
-          {/* Antenna */}
-          <line x1="100" y1="60" x2="100" y2="40" stroke="#f97316" strokeWidth="2" />
-          <circle cx="100" cy="40" r="4" fill="#f97316" />
+        
+        {/* Background Blob */}
+        <path fill="url(#grad1)" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.7,89.7,-0.5C88.9,14.7,82.2,29.4,73.1,42.1C64,54.8,52.5,65.5,39.1,72.7C25.7,79.9,10.4,83.6,-4.1,83.6C-18.6,83.6,-37.2,79.9,-51.1,71.1C-65,62.3,-74.2,48.4,-80.1,33.3C-86,18.2,-88.6,1.9,-86.3,-13.7C-84,-29.3,-76.8,-44.2,-65.4,-54.6C-54,-65,-38.4,-70.9,-24.1,-75.6C-9.8,-80.3,3.2,-83.8,17.4,-82.1C31.6,-80.4,44.7,-76.4,44.7,-76.4Z" transform="translate(120 120)" />
+        
+        <motion.g transform="translate(40, 40)">
+          {/* Robot Body */}
+          <rect x="60" y="100" width="80" height="70" rx="15" fill="#18181b" stroke="#f97316" strokeWidth="2" />
+          
+          {/* Robot Head */}
+          <motion.g
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <rect x="70" y="45" width="60" height="50" rx="12" fill="#18181b" stroke="#f97316" strokeWidth="2" />
+            {/* Eyes - Happy/Blinking */}
+            <motion.rect 
+              animate={{ height: [10, 2, 10] }}
+              transition={{ duration: 3, repeat: Infinity, times: [0, 0.1, 0.2] }}
+              x="82" y="60" width="10" height="10" rx="2" fill="#f97316" filter="url(#glow)" 
+            />
+            <motion.rect 
+              animate={{ height: [10, 2, 10] }}
+              transition={{ duration: 3, repeat: Infinity, times: [0, 0.1, 0.2] }}
+              x="108" y="60" width="10" height="10" rx="2" fill="#f97316" filter="url(#glow)" 
+            />
+            {/* Happy Smile */}
+            <path d="M85 80 Q100 92 115 80" stroke="#f97316" strokeWidth="3" fill="none" strokeLinecap="round" />
+            
+            {/* Antenna */}
+            <line x1="100" y1="45" x2="100" y2="25" stroke="#f97316" strokeWidth="2" />
+            <circle cx="100" cy="25" r="4" fill="#f97316" filter="url(#glow)" />
+          </motion.g>
+
+          {/* Laptop */}
+          <g transform="translate(110, 130)">
+            <rect x="0" y="0" width="70" height="45" rx="4" fill="#27272a" stroke="#f97316" strokeWidth="1.5" transform="skewX(-10)" />
+            <rect x="5" y="5" width="60" height="35" rx="2" fill="#09090b" />
+            {/* Code lines on screen */}
+            <rect x="10" y="12" width="20" height="2" fill="#f97316" opacity="0.6" />
+            <rect x="10" y="18" width="40" height="2" fill="#f97316" opacity="0.4" />
+            <rect x="10" y="24" width="30" height="2" fill="#f97316" opacity="0.5" />
+            
+            {/* Keyboard part */}
+            <path d="M-5 45 L75 45 L85 65 L5 65 Z" fill="#18181b" stroke="#f97316" strokeWidth="1.5" />
+          </g>
+
+          {/* Hands - Typing Animation */}
+          <motion.circle 
+            animate={{ y: [145, 135, 145], x: [115, 120, 115] }}
+            transition={{ duration: 0.2, repeat: Infinity }}
+            cx="115" cy="145" r="6" fill="#f97316" 
+          />
+          <motion.circle 
+            animate={{ y: [140, 150, 140], x: [135, 130, 135] }}
+            transition={{ duration: 0.25, repeat: Infinity }}
+            cx="135" cy="145" r="6" fill="#f97316" 
+          />
+
+          {/* Floating Code Particles */}
+          {[
+            { char: '{', x: 160, y: 80, delay: 0 },
+            { char: '}', x: 180, y: 110, delay: 0.5 },
+            { char: '</>', x: 150, y: 140, delay: 1 },
+            { char: ';', x: 190, y: 60, delay: 1.5 },
+          ].map((p, i) => (
+            <motion.text
+              key={i}
+              x={p.x}
+              y={p.y}
+              fill="#f97316"
+              fontSize="14"
+              fontWeight="bold"
+              fontFamily="monospace"
+              animate={{
+                y: [p.y, p.y - 30],
+                opacity: [0, 1, 0],
+                scale: [0.5, 1.2, 0.8]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                delay: p.delay,
+                ease: "linear"
+              }}
+            >
+              {p.char}
+            </motion.text>
+          ))}
         </motion.g>
       </svg>
     </motion.div>
