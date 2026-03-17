@@ -145,7 +145,7 @@ const AnimatedCharacter = () => {
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] md:w-[550px] opacity-50 pointer-events-none z-0 hidden lg:block"
+      className="absolute right-[-50px] md:right-0 top-1/2 -translate-y-1/2 w-[250px] sm:w-[350px] md:w-[550px] opacity-20 lg:opacity-50 pointer-events-none z-0 block"
     >
       <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
         <defs>
