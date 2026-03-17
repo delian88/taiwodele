@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Mail, 
@@ -32,8 +32,147 @@ import {
   ShieldCheck,
   Globe,
   Sparkles,
-  MessageSquare
+  MessageSquare,
+  Zap
 } from 'lucide-react';
+
+// Fireworks Component
+const Fireworks = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let particles: any[] = [];
+    let animationFrameId: number;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      alpha: number;
+      color: string;
+      size: number;
+
+      constructor(x: number, y: number, color: string) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 1;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.color = color;
+        this.size = Math.random() * 2 + 1;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.05; // gravity
+        this.alpha -= 0.01;
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const colors = ['#f97316', '#fb923c', '#fdba74', '#ffffff'];
+
+    const createFirework = () => {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * (canvas.height * 0.5);
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      for (let i = 0; i < 30; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (Math.random() < 0.02) createFirework();
+
+      particles = particles.filter(p => p.alpha > 0);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-30" />;
+};
+
+// Animated Character Component
+const AnimatedCharacter = () => {
+  return (
+    <motion.div
+      animate={{
+        y: [0, -20, 0],
+        rotate: [0, 5, -5, 0],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="absolute right-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[500px] opacity-20 pointer-events-none z-0 hidden lg:block"
+    >
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#000', stopOpacity: 1 }} />
+          </linearGradient>
+        </defs>
+        <path fill="url(#grad1)" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.7,89.7,-0.5C88.9,14.7,82.2,29.4,73.1,42.1C64,54.8,52.5,65.5,39.1,72.7C25.7,79.9,10.4,83.6,-4.1,83.6C-18.6,83.6,-37.2,79.9,-51.1,71.1C-65,62.3,-74.2,48.4,-80.1,33.3C-86,18.2,-88.6,1.9,-86.3,-13.7C-84,-29.3,-76.8,-44.2,-65.4,-54.6C-54,-65,-38.4,-70.9,-24.1,-75.6C-9.8,-80.3,3.2,-83.8,17.4,-82.1C31.6,-80.4,44.7,-76.4,44.7,-76.4Z" transform="translate(100 100)" />
+        <motion.g
+          animate={{
+            y: [0, -5, 0],
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          {/* Stylized Robot/Character Head */}
+          <rect x="70" y="60" width="60" height="50" rx="10" fill="#18181b" stroke="#f97316" strokeWidth="2" />
+          <rect x="80" y="75" width="10" height="10" rx="2" fill="#f97316" className="animate-pulse" />
+          <rect x="110" y="75" width="10" height="10" rx="2" fill="#f97316" className="animate-pulse" />
+          <path d="M85 95 Q100 105 115 95" stroke="#f97316" strokeWidth="2" fill="none" />
+          {/* Antenna */}
+          <line x1="100" y1="60" x2="100" y2="40" stroke="#f97316" strokeWidth="2" />
+          <circle cx="100" cy="40" r="4" fill="#f97316" />
+        </motion.g>
+      </svg>
+    </motion.div>
+  );
+};
 
 const sections = [
   { id: 'about', label: 'About', icon: UserIcon },
@@ -107,7 +246,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-orange-500/30">
+    <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-orange-500/30 overflow-x-hidden">
+      <Fireworks />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 h-20 bg-[#050505]/60 backdrop-blur-2xl border-b border-white/5 z-50 px-6 md:px-12 flex items-center justify-between">
         <motion.div 
@@ -192,6 +332,7 @@ export default function App() {
         {/* Hero Section / About */}
         <section id="about" className="min-h-[90vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 py-20 relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none" />
+          <AnimatedCharacter />
           
           <div className="max-w-4xl relative z-10">
             <motion.div
@@ -720,7 +861,14 @@ export default function App() {
       {/* Footer */}
       <footer className="px-6 md:px-12 lg:px-24 py-20 border-t border-white/5 bg-[#050505]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="space-y-6 text-center md:text-left">
+          <div className="space-y-6 text-center md:text-left relative">
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="absolute -top-12 left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 opacity-20"
+            >
+              <Zap className="w-8 h-8 text-orange-500" />
+            </motion.div>
             <div className="flex items-center justify-center md:justify-start gap-3">
               <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
                 <span className="text-black font-bold text-xl">TO</span>
