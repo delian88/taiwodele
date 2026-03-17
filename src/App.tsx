@@ -319,10 +319,13 @@ export default function App() {
               </button>
             ))}
             <button 
-              onClick={() => window.location.href = 'mailto:taiwodele88@gmail.com'}
-              className="mt-auto w-full py-4 bg-orange-500 text-black rounded-2xl text-lg font-bold shadow-xl shadow-orange-500/20"
+              onClick={() => {
+                setIsHireModalOpen(true);
+                setIsMenuOpen(false);
+              }}
+              className="mt-auto w-full py-4 bg-orange-500 text-black rounded-2xl text-lg font-bold shadow-xl shadow-orange-500/20 shimmer"
             >
-              Hire Me
+              Hire Me Now
             </button>
           </motion.div>
         )}
@@ -350,7 +353,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-6xl md:text-8xl font-black tracking-tighter mb-8"
+              className="text-5xl md:text-8xl font-black tracking-tighter mb-8"
             >
               Taiwo <span className="text-orange-500">Oladele</span>
             </motion.h1>
@@ -475,21 +478,21 @@ export default function App() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="group relative pl-8 border-l-2 border-white/5 hover:border-orange-500 transition-colors"
+                  className="group relative pl-6 md:pl-8 border-l-2 border-white/5 hover:border-orange-500 transition-colors"
                 >
                   <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#050505] border-2 border-white/10 group-hover:border-orange-500 transition-colors" />
-                  <div className="glass-dark p-8 rounded-3xl border border-white/5 group-hover:border-orange-500/30 transition-all">
+                  <div className="glass-dark p-6 md:p-8 rounded-3xl border border-white/5 group-hover:border-orange-500/30 transition-all">
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
                       <div>
-                        <h3 className="text-2xl font-bold text-white group-hover:text-orange-500 transition-colors">{exp.role}</h3>
+                        <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-orange-500 transition-colors">{exp.role}</h3>
                         <p className="text-orange-500 font-medium">{exp.company}</p>
                         {exp.position && <p className="text-zinc-500 text-sm mt-1 italic">{exp.position}</p>}
                       </div>
-                      <span className="text-sm font-bold uppercase tracking-widest text-zinc-500 bg-zinc-900/50 px-4 py-2 rounded-full border border-white/5 backdrop-blur-sm">
+                      <span className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-zinc-500 bg-zinc-900/50 px-4 py-2 rounded-full border border-white/5 backdrop-blur-sm self-start">
                         {exp.period}
                       </span>
                     </div>
-                    {exp.desc && <p className="text-zinc-400 leading-relaxed max-w-3xl">{exp.desc}</p>}
+                    {exp.desc && <p className="text-zinc-400 text-sm md:text-base leading-relaxed max-w-3xl">{exp.desc}</p>}
                   </div>
                 </motion.div>
               ))}
@@ -916,43 +919,44 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg glass-dark p-8 md:p-12 rounded-[2.5rem] border border-orange-500/30 shadow-2xl shadow-orange-500/20 overflow-hidden"
+              className="relative w-full max-w-lg glass-dark p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-orange-500/30 shadow-2xl shadow-orange-500/20 overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 blur-[80px] -mr-32 -mt-32 animate-pulse-glow" />
               
               <button 
                 onClick={() => setIsHireModalOpen(false)}
-                className="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors"
+                className="absolute top-4 right-4 md:top-6 md:right-6 p-3 bg-white/5 hover:bg-white/10 rounded-full text-zinc-400 hover:text-white transition-all z-20"
+                aria-label="Close modal"
               >
                 <X className="w-6 h-6" />
               </button>
 
               <div className="relative z-10 text-center">
-                <div className="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-orange-500/40 shimmer rotate-3">
-                  <MessageSquare className="w-10 h-10 text-black" />
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-orange-500 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-xl shadow-orange-500/40 shimmer rotate-3">
+                  <MessageSquare className="w-8 h-8 md:w-10 md:h-10 text-black" />
                 </div>
                 
-                <h2 className="text-4xl font-black tracking-tight mb-4">Let's Build Something <span className="text-orange-500">Amazing</span></h2>
-                <p className="text-zinc-400 text-lg mb-10 leading-relaxed">
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4 leading-tight">Let's Build Something <span className="text-orange-500">Amazing</span></h2>
+                <p className="text-zinc-400 text-base md:text-lg mb-8 md:mb-10 leading-relaxed">
                   I'm currently available for new projects and full-time opportunities. Let's discuss how I can help your team succeed.
                 </p>
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 md:gap-4">
                   <button 
                     onClick={() => window.location.href = 'mailto:taiwodele88@gmail.com'}
-                    className="w-full py-5 bg-orange-500 text-black rounded-2xl font-black text-xl hover:bg-orange-400 transition-all shadow-xl shadow-orange-500/30 shimmer"
+                    className="w-full py-4 md:py-5 bg-orange-500 text-black rounded-xl md:rounded-2xl font-black text-lg md:text-xl hover:bg-orange-400 transition-all shadow-xl shadow-orange-500/30 shimmer"
                   >
                     Send an Email
                   </button>
                   <button 
                     onClick={() => window.location.href = 'tel:09054755699'}
-                    className="w-full py-5 bg-white/5 border border-white/10 text-white rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
+                    className="w-full py-4 md:py-5 bg-white/5 border border-white/10 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:bg-white/10 transition-all"
                   >
                     Call Me: 09054755699
                   </button>
                 </div>
 
-                <p className="mt-8 text-zinc-500 text-sm">
+                <p className="mt-6 md:mt-8 text-zinc-500 text-xs md:text-sm">
                   Typically responds within 24 hours
                 </p>
               </div>
